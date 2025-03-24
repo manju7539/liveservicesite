@@ -8,9 +8,7 @@ class MainModel extends CI_Model {
         date_default_timezone_set('Asia/Kolkata');
     }
 
-    //  For login Check_Mail(Super_admin)....Supriya    
-                       
-    public function check_email($email, $password, $userType)
+   public function check_email($email, $password, $userType)
     {
         $this->db->where('email_id', $email);
         $this->db->where('password', $password);
@@ -19,13 +17,46 @@ class MainModel extends CI_Model {
         return $query->row_array();
     }
 
-    //get all users in super admin
-    public function get_all_user($email,$user_is, $userType){
+
+   public function get_all_user($email,$user_is, $userType){
         $this->db->where('email_id',$email);
         $this->db->where('user_type',$userType);
         return $this->db->get('register')->row_array();
 
     }
+
+  // Fetch booking by ID
+    public function get_booking_by_id($booking_id) {
+        return $this->db->where('hotel_enquiry_request_id', $booking_id)
+                        ->get('hotel_enquiry_request')
+                        ->row_array();
+    }
+
+    // Update booking status to "Rejected"
+     public function reject_booking($booking_id, $user_id, $role) {
+        $data = [
+            'request_status' => 2, // 2 => Rejected
+            'request_reject_by' => $role, // 1 => Admin, 2 => Front Office
+            'request_reject_by_u_id' => $user_id,
+            'reject_date' => date('Y-m-d')
+        ];
+
+        $this->db->where('hotel_enquiry_request_id', $booking_id);
+        $this->db->update('hotel_enquiry_request', $data);
+
+        // Log the query for debugging
+        log_message('error', 'SQL Query: ' . $this->db->last_query());
+
+        return $this->db->affected_rows() > 0; // Returns true if the row was updated
+    }
+
+    // Update booking status
+    public function update_booking_status($booking_id, $status) {
+        return $this->db->where('booking_id', $booking_id)
+                        ->update('hotel_enquiry_request', ['request_status' => $status]);
+    }
+    
+    
 
     public function get_room_service_menu_list($room_serv_cat_id,$hotel_id)
     {
@@ -33,6 +64,11 @@ class MainModel extends CI_Model {
         $this->db->where('room_serv_cat_id',$room_serv_cat_id);
         return $this->db->get('room_serv_menu_list')->result_array();
     }
+    
+    public function getCount($table, $where) {
+    $this->db->where($where);
+    return $this->db->count_all_results($table);
+}
     public function getData1($tbl)
     {
         //return $this->db->get($tbl)->row_array();

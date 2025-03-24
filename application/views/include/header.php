@@ -984,14 +984,14 @@
 										</a>
 										
 									</li>
-									<li class="nav-item <?php if($this->uri->uri_string() == 'handover_staff') { echo 'active'; } ?>">
+								<!--	<li class="nav-item <?php if($this->uri->uri_string() == 'handover_staff') { echo 'active'; } ?>">
 									<a href="<?php echo base_url('handover_staff')?>" class="nav-link nav-toggle">
 									<i class="material-icons">business_center</i>
 										<span class="title">Staff handover</span>
 										<!-- <span class="arrow"></span> -->
 									</a>
 									
-								</li>
+								</li>-->
 									<?php
 
 				$wh = '(admin_id = "'.$u_id.'" AND department_id = 2 AND department_status = 1)';
@@ -1126,6 +1126,15 @@
 										</li>
 									</ul>
 								</li>
+									<li class="nav-item start <?php if($this->uri->uri_string() == 'HoteladminController/Ser_request') { echo 'active'; } ?>">
+										<a href="<?php echo base_url('HoteladminController/Ser_request') ?>" class="nav-link nav-toggle">
+											<i class="material-icons">dashboard</i>
+											<span class="title">Service Request</span>
+											<span class="selected"></span>
+											
+										</a>
+										
+									</li>
 
 									<li class="nav-item start <?php if($this->uri->uri_string() == 'HoteladminController/feedbackList') { echo 'active'; } ?>">
 										<a href="<?php echo base_url('HoteladminController/feedbackList') ?>" class="nav-link nav-toggle">
@@ -1136,6 +1145,18 @@
 										</a>
 										
 									</li>
+									
+									<li class="nav-item start <?php if($this->uri->uri_string() == 'HoteladminController/offerList') { echo 'active'; } ?>">
+										<a href="<?php echo base_url('HoteladminController/offerList') ?>" class="nav-link nav-toggle">
+											<i class="material-icons">dashboard</i>
+											<span class="title">Offers</span>
+											<span class="selected"></span>
+											
+										</a>
+										
+									</li>
+									
+									
 									<li class="nav-item <?php if($this->uri->uri_string() == 'HoteladminController/nearByPlace' || $this->uri->uri_string() == 'HoteladminController/nearByHelp' ) { echo 'active'; } ?>">
 									<a href="javascript:;" class="nav-link nav-toggle">
 										<i class="material-icons">list</i>
@@ -1156,15 +1177,7 @@
 										
 									</ul>
 								</li>
-								<li class="nav-item start <?php if($this->uri->uri_string() == 'HoteladminController/offerList') { echo 'active'; } ?>">
-										<a href="<?php echo base_url('HoteladminController/offerList') ?>" class="nav-link nav-toggle">
-											<i class="material-icons">dashboard</i>
-											<span class="title">Offers</span>
-											<span class="selected"></span>
-											
-										</a>
-										
-									</li>
+								
 									<li class="nav-item start <?php if($this->uri->uri_string() == 'HoteladminController/hotel_information') { echo 'active'; } ?>">
 										<a href="<?php echo base_url('HoteladminController/hotel_information') ?>" class="nav-link nav-toggle">
 											<i class="material-icons">dashboard</i>
@@ -1215,15 +1228,7 @@
 										
 									</li>
 
-									<li class="nav-item start <?php if($this->uri->uri_string() == 'HoteladminController/Ser_request') { echo 'active'; } ?>">
-										<a href="<?php echo base_url('HoteladminController/Ser_request') ?>" class="nav-link nav-toggle">
-											<i class="material-icons">dashboard</i>
-											<span class="title">Service Request</span>
-											<span class="selected"></span>
-											
-										</a>
-										
-									</li>
+								
 								
 								
 								
@@ -1232,6 +1237,15 @@
 									<a href="<?php echo base_url('Dashboard') ?>" class="nav-link nav-toggle">
 										<i class="material-icons">dashboard</i>
 										<span class="title">Dashboard</span>
+										<span class="selected"></span>
+										
+									</a>
+									
+								</li>
+								<li class="nav-item start <?php if($this->uri->uri_string() == 'enquiry') { echo 'active'; } ?>">
+									<a href="<?php echo base_url('enquiry') ?>" class="nav-link nav-toggle">
+										<i class="material-icons">dashboard</i>
+										<span class="title"> Enquiry</span>
 										<span class="selected"></span>
 										
 									</a>
@@ -1269,6 +1283,15 @@
 									</a>
 									
 								</li>
+								<li class="nav-item start <?php if($this->uri->uri_string() == 'guests') { echo 'active'; } ?>">
+									<a href="<?php echo base_url('guests') ?>" class="nav-link nav-toggle">
+										<i class="material-icons">dashboard</i>
+										<span class="title">Guests</span>
+										<span class="selected"></span>
+										
+									</a>
+									
+								</li>
 								<li class="nav-item <?php if($this->uri->uri_string() == 'businessCenterRequest' || $this->uri->uri_string() == 'ManageBusinessCenter') { echo 'active'; } ?>">
 									<a href="#" class="nav-link nav-toggle">
 										<i class="material-icons">email</i>
@@ -1291,15 +1314,16 @@
 										
 									</ul>
 								</li>
-								<li class="nav-item start <?php if($this->uri->uri_string() == 'enquiry') { echo 'active'; } ?>">
-									<a href="<?php echo base_url('enquiry') ?>" class="nav-link nav-toggle">
+									<li class="nav-item start <?php if($this->uri->uri_string() == 'visitors') { echo 'active'; } ?>">
+									<a href="<?php echo base_url('visitors') ?>" class="nav-link nav-toggle">
 										<i class="material-icons">dashboard</i>
-										<span class="title"> Enquiry</span>
+										<span class="title">Visitors</span>
 										<span class="selected"></span>
 										
 									</a>
 									
 								</li>
+								
 								<li class="nav-item start <?php if($this->uri->uri_string() == 'roomStatus') { echo 'active'; } ?>">
 									<a href="<?php echo base_url('roomStatus') ?>" class="nav-link nav-toggle">
 										<i class="material-icons">dashboard</i>
@@ -1309,24 +1333,8 @@
 									</a>
 									
 								</li>
-								<li class="nav-item start <?php if($this->uri->uri_string() == 'guests') { echo 'active'; } ?>">
-									<a href="<?php echo base_url('guests') ?>" class="nav-link nav-toggle">
-										<i class="material-icons">dashboard</i>
-										<span class="title">Guests</span>
-										<span class="selected"></span>
-										
-									</a>
-									
-								</li>
-								<li class="nav-item start <?php if($this->uri->uri_string() == 'visitors') { echo 'active'; } ?>">
-									<a href="<?php echo base_url('visitors') ?>" class="nav-link nav-toggle">
-										<i class="material-icons">dashboard</i>
-										<span class="title">Visitors</span>
-										<span class="selected"></span>
-										
-									</a>
-									
-								</li>
+								
+							
 								<li class="nav-item start <?php if($this->uri->uri_string() == 'notification') { echo 'active'; } ?>">
 									<a href="<?php echo base_url('notification') ?>" class="nav-link nav-toggle">
 										<i class="material-icons">dashboard</i>
@@ -1371,11 +1379,11 @@
 										<!-- <span class="label label-rouded label-menu label-danger">new</span> -->
 									</a>
 									<ul class="sub-menu">
-										<!-- <li class="nav-item <?php if($this->uri->uri_string() == '') { echo 'active'; } ?>">
-											<a href="<?php echo base_url('handover') ?>" class="nav-link ">
-												<span class="title">Manage Handover</span>
+										<!--<li class="nav-item <?php if($this->uri->uri_string() == '') { echo 'active'; } ?>">
+										<a href="<?php echo base_url('handover') ?>" class="nav-link ">
+											<span class="title">Manage Handover</span>
 											</a>
-										</li> -->
+										</li>-->
 										<li class="nav-item <?php if($this->uri->uri_string() == '') { echo 'active'; } ?>">
 											<a href="<?php echo base_url('staffhandover') ?>" class="nav-link ">
 												<span class="title">Staff Hanover</span>
@@ -1610,12 +1618,7 @@
 											</li> 
 										</li>
 										
-
-												<li class="nav-item <?php if($this->uri->uri_string() == 'menu_setting') { echo 'active'; } ?>">
-														<a href="<?php echo base_url('menu_setting') ?>" class="nav-link ">
-															<span class="title">Menu Settings</span>
-														</a>
-													</li>		
+		
 										<!-- <li class="nav-item">
 										<li class="nav-item <?php if($this->uri->uri_string() == 'web_terms' || $this->uri->uri_string() == 'web_privacy') { echo 'active'; } ?>">
 												<a href="#" class="nav-link nav-toggle">
@@ -1676,29 +1679,11 @@
 									</a>
 									
 								</li>
-								<li class="nav-item start <?php if($this->uri->uri_string() == 'Staff_mang') { echo 'active'; } ?>">
-									<a href="<?php echo base_url('Staff_mang') ?>" class="nav-link nav-toggle">
-									<i class="material-icons">vpn_key</i>
-										<span class="title">Manage Staff</span>
-										<span class="selected"></span>
-										
-									</a>
-									
-								</li>
-
-								<li class="nav-item start <?php if($this->uri->uri_string() == 'Laundry') { echo 'active'; } ?>">
+								
+									<li class="nav-item start <?php if($this->uri->uri_string() == 'Laundry') { echo 'active'; } ?>">
 									<a href="<?php echo base_url('Laundry') ?>" class="nav-link nav-toggle">
 									<i class="material-icons">business_center</i>
 										<span class="title">Laundry</span>
-										<span class="selected"></span>
-										
-									</a>
-									
-								</li>
-								<li class="nav-item start <?php if($this->uri->uri_string() == 'Staff_review') { echo 'active'; } ?>">
-									<a href="<?php echo base_url('Staff_review') ?>" class="nav-link nav-toggle">
-									<i class="fa fa-star"></i>
-										<span class="title">Review</span>
 										<span class="selected"></span>
 										
 									</a>
@@ -1713,10 +1698,41 @@
 									</a>
 									
 								</li>
+								<li class="nav-item start <?php if($this->uri->uri_string() == 'Staff_mang') { echo 'active'; } ?>">
+									<a href="<?php echo base_url('Staff_mang') ?>" class="nav-link nav-toggle">
+									<i class="material-icons">vpn_key</i>
+										<span class="title">Manage Staff</span>
+										<span class="selected"></span>
+										
+									</a>
+									
+								</li>
+
+							
+								
+								
 								<li class="nav-item start <?php if($this->uri->uri_string() == 'service_mang') { echo 'active'; } ?>">
 									<a href="<?php echo base_url('service_mang') ?>" class="nav-link nav-toggle">
 									<i class="fa fa-star"></i>
 										<span class="title">Manage Service</span>
+										<span class="selected"></span>
+										
+									</a>
+									
+								</li>
+									<li class="nav-item start <?php if($this->uri->uri_string() == 'Service_request') { echo 'active'; } ?> ">
+									<a href="<?php echo base_url('Service_request') ?>" class="nav-link nav-toggle">
+									<i class="material-icons">dashboard</i>
+										<span class="title">Service Request</span>
+										<span class="selected"></span>
+										
+									</a>
+									
+								</li>
+								<li class="nav-item start <?php if($this->uri->uri_string() == 'Staff_review') { echo 'active'; } ?>">
+									<a href="<?php echo base_url('Staff_review') ?>" class="nav-link nav-toggle">
+									<i class="fa fa-star"></i>
+										<span class="title">Review</span>
 										<span class="selected"></span>
 										
 									</a>
@@ -1741,15 +1757,7 @@
 										</li>
 									</ul>
 								</li>
-								<li class="nav-item start <?php if($this->uri->uri_string() == 'Service_request') { echo 'active'; } ?> ">
-									<a href="<?php echo base_url('Service_request') ?>" class="nav-link nav-toggle">
-									<i class="material-icons">dashboard</i>
-										<span class="title">Service Request</span>
-										<span class="selected"></span>
-										
-									</a>
-									
-								</li>
+							
 
 							<?php } elseif($this->session->userdata('userType') == 6){?>
 								<li class="nav-item start active">

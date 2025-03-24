@@ -1162,66 +1162,141 @@ class HouseKeepingController extends CI_Controller
         $this->load->view('include/footer');
 	}
 
+    // public function add_cloths()
+    // {   
+    //     $u_id = $this->session->userdata('u_id');
+    //     $wh = '(u_id = "'.$u_id.'")';
+    //     $get__info = $this->HouseKeepingModel->getData('register', $wh);
+
+    //     $cloth_name = $this->input->post('cloth_name');
+    //     $price = $this->input->post('price');
+      
+    //     $file="";
+    //     if (!empty($_FILES['File']['name'])) 
+    //     {
+    //         $_FILES['my_uploaded_file']['name'] = $_FILES['File']['name'];
+    //         $_FILES['my_uploaded_file']['type'] = $_FILES['File']['type'];
+    //         $_FILES['my_uploaded_file']['tmp_name'] = $_FILES['File']['tmp_name'];
+    //         $_FILES['my_uploaded_file']['error'] = $_FILES['File']['error'];
+    //         $_FILES['my_uploaded_file']['size'] = $_FILES['File']['size'];
+
+    //         $path = 'assets/upload/cloth_img/';
+    //         $file_path = './' . $path;
+    //         $config['allowed_types'] = '*';
+
+    //         $config['upload_path'] = $file_path;
+    //         $this->load->library('upload', $config);
+    //         $this->upload->initialize($config);
+
+    //         if ($this->upload->do_upload('my_uploaded_file'))
+    //         {
+    //             $file_data = $this->upload->data();
+
+    //             $file_path_url = $path . $file_data['file_name'];
+
+    //             $file=$file_path_url;
+    //         }
+    //         else
+    //         {
+    //             $file="";
+    //         }
+    //     }
+
+    //     $arr= array(
+    //                         'cloth_name'=>$cloth_name,
+    //                         'price'=>$price,
+    //                         'added_by'=>2,
+    //                         'added_by_u_d'=>$get__info['u_id'],
+    //                         'hotel_id' =>$get__info['hotel_id'],
+    //                         'image' => base_url().$file
+    //               );
+
+    //     $add = $this->HouseKeepingModel->insertData($tbl="cloth", $arr);
+
+    //     if ($add) 
+    //     {
+    //         $admin_id = $this->session->userdata('u_id');
+    //         $wh_admin = '(u_id ="'.$admin_id.'")';
+    //         $get_hotel_id = $this->HouseKeepingModel->getData('register',$wh_admin);
+    //         $hotel_id = $get_hotel_id['hotel_id'];
+
+    //         $data["manage_cloth"] = $this->HouseKeepingModel->get_cloth_list_pagination($hotel_id);
+    //         $this->load->view('housekeeping/ajaxlaundrylist', $data);
+    //     }
+    // }
+    
     public function add_cloths()
     {   
         $u_id = $this->session->userdata('u_id');
+    
+        // Fetch user details
         $wh = '(u_id = "'.$u_id.'")';
         $get__info = $this->HouseKeepingModel->getData('register', $wh);
-
-        $cloth_name = $this->input->post('cloth_name');
-        $price = $this->input->post('price');
-      
-        $file="";
-        if (!empty($_FILES['File']['name'])) 
+    
+        if (!$get__info) {
+            echo "Invalid User";
+            return;
+        }
+    
+        // Get cloth name and price
+        $cloth_name = htmlspecialchars($this->input->post('places_name')); 
+        $price = htmlspecialchars($this->input->post('price'));
+        
+        // Get selected image (if any)
+        $selected_image = htmlspecialchars($this->input->post('cloth_image')); 
+        $file = "";
+    
+        // Handle file upload if exists
+        if (!empty($_FILES['cloth_image']['name'])) 
         {
-            $_FILES['my_uploaded_file']['name'] = $_FILES['File']['name'];
-            $_FILES['my_uploaded_file']['type'] = $_FILES['File']['type'];
-            $_FILES['my_uploaded_file']['tmp_name'] = $_FILES['File']['tmp_name'];
-            $_FILES['my_uploaded_file']['error'] = $_FILES['File']['error'];
-            $_FILES['my_uploaded_file']['size'] = $_FILES['File']['size'];
-
-            $path = 'assets/upload/cloth_img/';
-            $file_path = './' . $path;
-            $config['allowed_types'] = '*';
-
-            $config['upload_path'] = $file_path;
+            $config['upload_path'] = './assets/upload/cloth_img/';
+            $config['allowed_types'] = 'jpg|jpeg|png|gif';
+            $config['file_name'] = time() . "_" . $_FILES['cloth_image']['name'];
+    
             $this->load->library('upload', $config);
             $this->upload->initialize($config);
-
-            if ($this->upload->do_upload('my_uploaded_file'))
+    
+            if ($this->upload->do_upload('cloth_image')) 
             {
                 $file_data = $this->upload->data();
-
-                $file_path_url = $path . $file_data['file_name'];
-
-                $file=$file_path_url;
+                $file = base_url() . 'assets/upload/cloth_img/' . $file_data['file_name'];
             }
-            else
-            {
-                $file="";
-            }
+        } 
+        else 
+        {
+            // Use selected image if no file is uploaded
+            $file = !empty($selected_image) ? $selected_image : "";
         }
-
-        $arr= array(
-                            'cloth_name'=>$cloth_name,
-                            'price'=>$price,
-                            'added_by'=>2,
-                            'added_by_u_d'=>$get__info['u_id'],
-                            'hotel_id' =>$get__info['hotel_id'],
-                            'image' => base_url().$file
-                   );
-
-        $add = $this->HouseKeepingModel->insertData($tbl="cloth", $arr);
-
+    
+        // Prepare data for insertion
+        $arr = array(
+            'cloth_name'   => $cloth_name,
+            'price'        => $price,
+            'added_by'     => 2,
+            'added_by_u_d' => $get__info['u_id'],
+            'hotel_id'     => $get__info['hotel_id'],
+            'image'        => $file
+        );
+    
+        // Insert into database
+        $add = $this->HouseKeepingModel->insertData('cloth', $arr);
+    
         if ($add) 
         {
+            // Fetch updated cloth list
             $admin_id = $this->session->userdata('u_id');
             $wh_admin = '(u_id ="'.$admin_id.'")';
-            $get_hotel_id = $this->HouseKeepingModel->getData('register',$wh_admin);
-            $hotel_id = $get_hotel_id['hotel_id'];
-
-            $data["manage_cloth"] = $this->HouseKeepingModel->get_cloth_list_pagination($hotel_id);
-            $this->load->view('housekeeping/ajaxlaundrylist', $data);
+            $get_hotel_id = $this->HouseKeepingModel->getData('register', $wh_admin);
+    
+            if ($get_hotel_id) {
+                $hotel_id = $get_hotel_id['hotel_id'];
+                $data["manage_cloth"] = $this->HouseKeepingModel->get_cloth_list_pagination($hotel_id);
+                $this->load->view('housekeeping/ajaxlaundrylist', $data);
+            }
+        } 
+        else 
+        {
+            echo "Error inserting data!";
         }
     }
     public function delete_cloths()

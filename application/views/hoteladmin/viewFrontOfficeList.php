@@ -90,7 +90,7 @@
 
     .services_subsection {
         width: 51px;
-        height: 75px;
+        height: 48px;
         border: none;
         outline: none;
         padding: 8px 13px;
@@ -293,44 +293,44 @@
                             <div id="aniimated-thumbnials" class="list-unstyled row clearfix gallery_subsection" style="background: #e8e8e8bd;padding: 14px;margin-top: 10px;display:none">
                                 <div class="active services_subsection" id="sub_icon_16" sub-id="1" data-id="10">
                                     <a href="javascript:void(0)" data-sub-html="Demo Description">
-                                        <img src="<?php echo base_url('assets/dist/images/new/gym.png') ?>" alt="" title="Gym Service" class='icon_size' style="height:75px;">
+                                        <img src="<?php echo base_url('assets/dist/images/new/gym.png') ?>" alt="" title="Gym Service" class='icon_size'>
                                         <p class='icon_header'>Gym </p> 
                                     </a>
                                 </div>
                                 <div class="services_subsection inactive" id="sub_icon_16" sub-id="2" data-id="10">
                                     <a href="javascript:void(0)" data-sub-html="Demo Description">
-                                        <img src="<?php echo base_url('assets/dist/images/new/spa.png') ?>" alt="" title="Spa Service" class='icon_size' style="height:75px;">
+                                        <img src="<?php echo base_url('assets/dist/images/new/spa.png') ?>" alt="" title="Spa Service" class='icon_size'>
                                         <p class='icon_header'>Spa</p> 
                                     </a>
                                 </div>
                                 <div class="services_subsection inactive" id="sub_icon_16" sub-id="3" data-id="10">
                                     <a href="javascript:void(0)" data-sub-html="Demo Description">
-                                        <img src="<?php echo base_url('assets/dist/images/new/pool.png') ?>" alt="" title="Pool Service" class='icon_size' style="height:75px;">
+                                        <img src="<?php echo base_url('assets/dist/images/new/pool.png') ?>" alt="" title="Pool Service" class='icon_size'>
                                         <p class='icon_header'>Pool</p> 
                                     </a>
                                 </div>
                                 <div class="inactive services_subsection" id="sub_icon_16" sub-id="4" data-id="10">
                                     <a href="javascript:void(0)" data-sub-html="Demo Description">
-                                        <img src="<?php echo base_url('assets/dist/images/new/shuttle.png') ?>" alt="" title="Shuttle Service" class='icon_size'style="height:75px;">
+                                        <img src="<?php echo base_url('assets/dist/images/new/shuttle.png') ?>" alt="" title="Shuttle Service" class='icon_size'>
                                         <p class='icon_header'>Shuttle</p> 
                                     </a>
                                 </div>
                                 <div class="inactive services_subsection" id="sub_icon_16" sub-id="5" data-id="10">
                                     <a href="javascript:void(0)" data-sub-html="Demo Description">
-                                        <img src="<?php echo base_url('assets/dist/images/new/baby_care.png') ?>" alt="" title="Baby care Service" class='icon_size' style="height:75px;">
+                                        <img src="<?php echo base_url('assets/dist/images/new/baby_care.png') ?>" alt="" title="Baby care Service" class='icon_size'>
                                         <p class='icon_header'>Baby care</p> 
                                     </a>
                                 </div>
                                 <div class="inactive services_subsection" id="sub_icon_16" sub-id="6" data-id="10">
                                     <a href="javascript:void(0)" data-sub-html="Demo Description">
-                                        <img src="<?php echo base_url('assets/dist/images/new/car_wash.png') ?>" alt="" title="Car Wash Service" class='icon_size' style="height:75px;">
+                                        <img src="<?php echo base_url('assets/dist/images/new/car_wash.png') ?>" alt="" title="Car Wash Service" class='icon_size'>
                                         <p class='icon_header'>Car Wash Service</p> 
                                     </a>
                                 </div>
                                 <div class="inactive services_subsection" id="sub_icon_16" sub-id="7" data-id="10">
                                     <a href="javascript:void(0)" data-sub-html="Demo Description">
-                                        <img src="<?php echo base_url('assets/dist/images/new/cloackroom.png') ?>" alt="" title="Cloakroom Service" class='icon_size' style="height:75px;">
-                                        <p class='icon_header'>Cloakroom</p> 
+                                        <img src="<?php echo base_url('assets/dist/images/new/cloackroom.png') ?>" alt="" title="Cloakroom Service" class='icon_size'>
+                                        <p class='icon_header'>Cloakroom Service</p> 
                                     </a>
                                 </div>
                                 <div class="inactive services_subsection" id="sub_icon_16" sub-id="8" data-id="10">
@@ -345,7 +345,7 @@
 
                                 <div class="inactive services_subsection" id="sub_icon_16" sub-id="n1" data-id="3">
                                     <a href="javascript:void(0)" data-sub-html="Demo Description">
-                                        <img src="<?php echo base_url('assets/dist/images/new/arrival.png') ?>" alt="" title="Arrival" class='icon_size' style="height:75px;">
+                                        <img src="<?php echo base_url('assets/dist/images/new/arrival.png') ?>" alt="" title="Arrival" class='icon_size'>
                                         <p class='icon_header'>Arrival</p> 
                                     </a>
                                 </div>

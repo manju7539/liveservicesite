@@ -832,27 +832,36 @@
                            </select>
                         </div>
                         <div class="mb-3 col-md-12 assignto" style="display:none">
-                           <label class="form-label">Assign To</label>
-                           <select id="status" name="staff_id" class="default-select form-control wide">
-                              <option value="">Choose</option>
-                              <?php
-                              $admin_id = $this->session->userdata('u_id');
-
-                              $wh_admin = '(u_id ="' . $admin_id . '")';
-                              $get_hotel_id = $this->MainModel->getData('register', $wh_admin);
-                              $hotel_id = $get_hotel_id['hotel_id'];
-
-                              $where = '(user_type = 8 AND hotel_id ="' . $hotel_id . '" AND is_active = 1)';
-                              $staff_details = $this->MainModel->getAllData1($tbl = 'register', $where);
-                              // echo "hii";echo "<pre>";print_r($staff_details);exit;
-                              foreach ($staff_details as $d) {
-                              ?>
-                                 <option value="<?php echo $d["u_id"];?>"><?php echo $d["full_name"]; ?></option>
-                              <?php
-                              }
-                              ?>
-                           </select>
+                            <label class="form-label">Assign To</label>
+                            <select id="status" name="staff_id" class="default-select form-control wide">
+                                <option value="">Choose</option>
+                                <?php
+                                $admin_id = $this->session->userdata('u_id');
+                        
+                                // Fetch hotel_id of logged-in admin
+                                $wh_admin = '(u_id ="' . $admin_id . '")';
+                                $get_hotel_id = $this->MainModel->getData('register', $wh_admin);
+                                $hotel_id = $get_hotel_id['hotel_id'];
+                        
+                                // Get all active staff members
+                                $where = '(user_type = 8 AND hotel_id ="' . $hotel_id . '" AND is_active = 1)';
+                                $staff_details = $this->MainModel->getAllData1('register', $where);
+                        
+                                foreach ($staff_details as $d) {
+                                    // Fetch the staff ID
+                                    $staff_id = $d["u_id"];
+                        
+                                    // Get assigned order count for today
+                                    $order_where = "(staff_id = '$staff_id' AND DATE(order_date) = CURDATE())";
+                                    $order_count = $this->MainModel->getCount('food_orders', $order_where);
+                        
+                                    // Display staff name with order count
+                                    echo '<option value="' . $staff_id . '">' . $d["full_name"] . ' (' . $order_count . ')</option>';
+                                }
+                                ?>
+                            </select>
                         </div>
+
                         <div class="mb-3 col-md-12 rejectreasonddd" style="display:none">
                            <label class="form-label">Reason For Rejecting</label>
                            <select id="reason" name="reject_reason" class="default-select form-control wide">

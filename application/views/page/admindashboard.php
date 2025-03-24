@@ -341,51 +341,40 @@
                      <header>Notifications</header>
                   </div>
                   <div class="card-body no-padding height-9">
-                  <div class="row">
+                     <div class="row">
                         <div class="noti-information notification-menu">
                            <div class="notification-list mail-list not-list small-slimscroll-style" style="height:620px">
-                              <?php
-                                 if($get_front_ofs_notifications)
-                                 {
-                                     // echo "<pre>";print_r($get_front_ofs_notifications);die;
-                                 foreach($get_front_ofs_notifications as $f_nt)
-                                 {
-                                 $wh = '(notification_id = "'.$f_nt['notification_id'].'" AND department_id = 2)';
-                                 
-                                 $notifictions_department_id = $this->FrontofficeModel->getAllData('notifictions_department_id',$wh);
-                                 // print_r($notifictions_department_id);
-                                 if($notifictions_department_id)
-                                 {
-                                 ?>
-                                 <div class="row">
-                                    <div class="col-2">
-                                    <a href="javascript:;" class="single-mail"> 
-                                        <span class="icon bg-primary"> 
-                                            <i class="fa fa-user-o"></i> 
-                                        </span>
-                                    </a>
-                                    </div>
-                                    <div class="col-10 d-flex flex-column ">
-                                       <span class="text-purple pt-1"><?php echo $f_nt['title'] ?>
-                                       </span>
-                                       <span class="text-black"><?php echo $f_nt['description'] ?>
-                                       </span>
-                                       <span class="notificationtime">
-                                          <small>
-                                             <?php echo date('d-m-Y',strtotime($f_nt['created_at']))." - ".date('h:i a',strtotime($f_nt['created_at'])) ?>
-                                          </small>
-                                       </span>
-                                    </div>
-                                 </div>
-                              <?php
-                                 }
-                                 }
-                                 }
-                                 else
-                                 {
-                                 echo "No Notifications Available";
-                                 }
-                                 ?>  
+                             <?php
+if (!empty($get_front_ofs_notifications)) {
+    foreach ($get_front_ofs_notifications as $f_nt) {
+        $wh = '(notification_id = "' . $f_nt['notification_id'] . '" AND department_id = 2)';
+        $notifictions_department_id = $this->FrontofficeModel->getAllData('notifictions_department_id', $wh);
+
+        if ($notifictions_department_id) { ?>
+            <div class="row">
+                <div class="col-2">
+                    <a href="javascript:;" class="single-mail">
+                        <span class="icon bg-primary">
+                            <i class="fa fa-user-o"></i>
+                        </span>
+                    </a>
+                </div>
+                <div class="col-10 d-flex flex-column">
+                    <span class="text-purple pt-1"><?= $f_nt['title'] ?></span>
+                    <span class="text-black"><?= $f_nt['description'] ?></span>
+                    <span class="notificationtime">
+                        <small>
+                            <?= date('d-m-Y', strtotime($f_nt['created_at'])) . " - " . date('h:i a', strtotime($f_nt['created_at'])) ?>
+                        </small>
+                    </span>
+                </div>
+            </div>
+        <?php }
+    }
+} else {
+    echo "<p class='text-center'>No Notifications Available</p>";
+}
+?> 
                            </div>
                            <div class="full-width text-center p-t-10">
                               <button type="button"
@@ -2235,46 +2224,6 @@
 </div>
 <!-- end page container -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function () {
-        console.log("AJAX script loaded!"); // Debugging step
-        let firstLoad = true; // Flag to track the first AJAX call
-
-        function fetchNotifications() {
-            console.log("Fetching notifications..."); // Debugging step
-
-            $.ajax({
-                url: "<?php echo base_url('FrontofficeController/frontoffice_notification_ajax'); ?>",
-                type: "GET",
-                dataType: "html",
-                success: function (response) {
-                    console.log("AJAX Success Response:", response);
-
-                    if ($.trim(response) !== "" && $.trim(response) !== "No Notifications Available") {
-                        if (firstLoad) {
-                            $("#notificationContainer").html(response); // Replace on first load
-                            firstLoad = false;
-                        } else {
-                            $("#notificationContainer").append(response); // Append new data
-                        }
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error("AJAX Error:", error);
-                }
-            });
-        }
-
-        // Call function immediately after page loads
-        fetchNotifications();
-
-        // Set interval to refresh notifications every 60 seconds (60000ms)
-        setInterval(fetchNotifications, 60000);
-    });
-</script>
-
-
 <script>
    $(function(){
         <?php if(!empty($type)): ?>
@@ -2321,9 +2270,28 @@
                        }
        });
    }
+   
+   
+   $(document).ready(function () {
+    function loadNotifications() {
+        $.ajax({
+            url: "<?= base_url('FrontofficeController/frontoffice_notification') ?>", // Adjust the URL if needed
+            type: "GET",
+            success: function (response) {
+                $(".notification-list").html(response); // Update the notifications area
+            },
+            error: function () {
+                console.log("Error fetching notifications");
+            }
+        });
+    }
 
+    // Load notifications every 3 seconds
+    setInterval(loadNotifications, 3000);
 
-
+    // Initial load
+    loadNotifications();
+});
 </script>
 <!-- <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script> -->
 <script>

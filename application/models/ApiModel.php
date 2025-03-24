@@ -65,6 +65,16 @@
             $this->db->insert($tbl,$arr);
             return $this->db->insert_id();
         }
+        
+        public function get_city_by_id()
+        {
+            $this->db->select('city_id, city');
+            $this->db->from('city');
+            $this->db->where('city_id', 18); // Only fetch city with ID 18
+            $query = $this->db->get();
+            
+            return $query->row_array(); // Return a single record
+        }
 
         public function edit_data($tbl,$wh,$arr)
         {
@@ -110,7 +120,7 @@
 
     public function get_user_data($u_id)
 {
-    $this->db->select('u_id, full_name, email_id, mobile_no, profile_photo, address, city, user_type'); // Include 'city'
+    $this->db->select('u_id, full_name, email_id, mobile_no, profile_photo, address, city, user_type,Id_proff_photo'); // Include 'city'
     $this->db->from('register');
     $this->db->where('u_id', $u_id);
     $this->db->where('user_type', 0);
@@ -140,6 +150,42 @@
             $this->db->where('hotel_id',$hotel_id);
             return $this->db->get('hotel_photos')->result_array();
         }
+        
+        public function get_feedback_data($u_id, $hotel_id, $booking_id)
+            {
+                return $this->db->select('rating, review_for, review, rating_date, rating_time')
+                                ->from('review')
+                                ->where('u_id', $u_id)
+                                ->where('hotel_id', $hotel_id)
+                                ->where('booking_id', $booking_id)
+                                ->get()
+                                ->result_array();
+            }
+            
+            public function update_feedback($u_id, $hotel_id, $booking_id, $data)
+                {
+                    return $this->db->where('u_id', $u_id)
+                                    ->where('hotel_id', $hotel_id)
+                                    ->where('booking_id', $booking_id)
+                                    ->update('review', $data);
+                }
+                
+                // Check if a review already exists
+public function get_existing_review($u_id, $hotel_id, $booking_id)
+{
+    return $this->db->where('u_id', $u_id)
+                    ->where('hotel_id', $hotel_id)
+                    ->where('booking_id', $booking_id)
+                    ->get('review')
+                    ->row_array();
+}
+
+// Update existing review
+public function update_review($review_id, $data)
+{
+    return $this->db->where('id', $review_id)->update('review', $data);
+}
+
 
         //get enquiry request list//8-11-2022 //archana
        /* public function get_enquiry_list($u_id)
@@ -175,17 +221,7 @@
             return $this->db->get('hotel_enquiry_request')->result_array();
         }
 
-        public function get_feedback_data($u_id, $hotel_id, $booking_id)
-            {
-                return $this->db->select('rating, review_for, review, rating_date, rating_time')
-                                ->from('review')
-                                ->where('u_id', $u_id)
-                                ->where('hotel_id', $hotel_id)
-                                ->where('booking_id', $booking_id)
-                                ->get()
-                                ->result_array();
-            }
-
+        
 
         //sub leads list //4-1-2023 //archana
         public function get_sub_enquiry_list($u_id,$request_id)
@@ -750,7 +786,7 @@
             $this->db->select('user_hotel_booking.*,register.hotel_name,register.city,register.state');
             $this->db->join('register','register.u_id = user_hotel_booking.hotel_id');
             $this->db->where('user_hotel_booking.u_id',$u_id);
-            $this->db->where('user_hotel_booking.booking_status',2);
+           $this->db->where_in('user_hotel_booking.booking_status', [2, 3]);
           	$this->db->order_by('user_hotel_booking.booking_id','desc');
             return $this->db->get('user_hotel_booking')->result_array();
         }

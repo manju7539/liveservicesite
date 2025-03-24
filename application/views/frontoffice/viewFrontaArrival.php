@@ -46,6 +46,8 @@
                                     </li>
                                     <li class="nav-item"><a href="#arrival2_div" data-bs-toggle="tab">Upcoming Arrival</a>
                                     </li>
+                                      <li class="nav-item"><a href="#arrival3_div" data-bs-toggle="tab">Cancel Request </a>
+                                    </li>
                                     
                                 </ul>
                             </header>
@@ -95,37 +97,29 @@
                                              <th>Rooms</th>
                                              <th>Adult</th>
                                              <th>Child</th>
+                                             <th>Action</th>
                                              <!-- <th>Assign Room</th> -->
                                           </tr>
                                         </thead>
                                         <tbody class="data">
                                         <?php
-                                             $j = 1;
-                                             if (!empty($today_hotel_book_list_by_app1)) // Ensure variable exists before using it
-                                             {
-                                                foreach ($today_hotel_book_list_by_app1 as $t_h_b)
+                                                
+                                                $j = 1;
+                                                if($today_hotel_book_list_by_app1)
                                                 {
-                                                   $user_data = $this->FrontofficeModel->get_admin_data($t_h_b['u_id']);
-                                                   $full_name = $user_data['full_name'] ?? ""; // Use null coalescing operator
-                                                   $mobile_no = $user_data['mobile_no'] ?? "";
-                                                   $email_id = $user_data['email_id'] ?? "";
+                                                    foreach($today_hotel_book_list_by_app1 as $t_h_b)
+                                                    {
+                                                        $user_data = $this->FrontofficeModel->get_admin_data($t_h_b['u_id']);
+                                                        // print_r($t_h_b);
+                                                        $full_name = "";
+                                                        $mobile_no = "";
 
-                                                   ?>
-                                                   <tr>
-                                                         <td><?= $j++; ?></td>
-                                                         <td><?= htmlspecialchars($full_name); ?></td>
-                                                         <td><?= htmlspecialchars($mobile_no); ?></td>
-                                                         <td><?= htmlspecialchars($email_id); ?></td>
-                                                   </tr>
-                                                   <?php
-                                                }
-                                             }
-                                             else
-                                             {
-                                                echo "<tr><td colspan='4'>No records found</td></tr>";
-                                             }
-                                             ?>
-
+                                                        if($user_data)
+                                                        {
+                                                            $full_name = $user_data['full_name'];
+                                                            $mobile_no = $user_data['mobile_no'];
+                                                            $email_id = $user_data['email_id'];
+                                            ?>
 
                                             <tr>
                                                 <td>
@@ -155,6 +149,30 @@
                                                 <td>
                                                     <?php echo $t_h_b['total_child'] ?>
                                                 </td>
+                                                 <td> 
+                                                    <button class="btn btn-warning shadow btn-xs sharp reject-btn" 
+                                                        data-booking-id="<?php echo $t_h_b['booking_id']; ?>">
+                                                        <i class="fa fa-times"></i>
+                                                    </button>
+                                                </td>
+                                                
+                                                <!-- Confirmation Modal -->
+                                                <div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="rejectModalLabel">Confirm Rejection</h5>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                Are you sure you want to reject this booking?
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelReject">Cancel</button>
+                                                                <button type="button" class="btn btn-danger" id="confirmReject">Reject</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
 
                                              
                                                 <!-- Modal -->
@@ -280,6 +298,99 @@
                             </div>
                         </div>
 <!-- </div> -->
+   <!-- cancel -->
+                 <div class="tab-pane" style="background-color:white;" id="arrival3_div"> 
+                            <div class="row">
+                                <div class="table-scrollable guest_arrive">
+                                    <table id="arrival_tbl" class="display full-width">
+                                <thead>
+                                    <tr>
+                                        <th>Sr.No.</th>
+                                        <th>Name</th>
+                                        <th>Date(C_In)</th>
+                                        <th>Date(C_Out)</th>
+                                        <th>Phone</th>
+                                        <th>Email</th>
+                                        <th>Rooms</th>
+                                        <th>Adult</th>
+                                        <th>Child</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="data">
+                                    <?php
+                                    $j = 1;
+                                    // Fetch only the bookings where booking_status = 4
+                                    $today_hotel_book_list_by_app1 = $this->FrontofficeModel->get_bookings_by_status(4);
+                            
+                                    if (!empty($today_hotel_book_list_by_app1)) {
+                                        foreach ($today_hotel_book_list_by_app1 as $t_h_b) {
+                                            $user_data = $this->FrontofficeModel->get_admin_data($t_h_b['u_id']);
+                                            
+                                            if ($user_data) {
+                                                $full_name = $user_data['full_name'] ?? '';
+                                                $mobile_no = $user_data['mobile_no'] ?? '';
+                                                $email_id = $user_data['email_id'] ?? '';
+                                            ?>
+                                            <tr>
+                                                <td><?= $j++ ?></td>
+                                                <td><?= htmlspecialchars($full_name) ?></td>
+                                                <td><?= date('d-m-Y', strtotime($t_h_b['check_in'])) ?></td>
+                                                <td><?= date('d-m-Y', strtotime($t_h_b['check_out'])) ?></td>
+                                                <td><?= htmlspecialchars($mobile_no) ?></td>
+                                                <td><?= htmlspecialchars($email_id) ?></td>
+                                                <td><?= htmlspecialchars($t_h_b['no_of_rooms']) ?></td>
+                                                <td><?= htmlspecialchars($t_h_b['total_adults']) ?></td>
+                                                <td><?= htmlspecialchars($t_h_b['total_child']) ?></td>
+                                                
+                                                 <!-- Accept Button -->
+                                                 <td>
+                                            <button class="btn btn-primary shadow btn-xs sharp edit-btn" data-id="<?php echo $t_h_b['booking_id']; ?>">
+                                                <i class="fa fa-edit"></i> <!-- Blue edit icon -->
+                                            </button>
+
+                                                 <!-- Reject Button -->
+                                                <!-- <button class="btn btn-warning shadow btn-xs sharp reject-btn" -->
+                                                <!--data-booking-id="<?= $t_h_b['booking_id']; ?>">-->
+                                                <!--<i class="fa fa-times"></i>-->
+                                                <!--</button>-->
+                                                                                
+                                              </td>
+                                              
+                                                     
+                                        <!-- Reject Confirmation Modal (Renamed to rejectBookingModal) -->
+                                            <div class="modal fade" id="rejectBookingModal" tabindex="-1" aria-labelledby="rejectBookingModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="rejectBookingModalLabel">Confirm Rejection</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            Are you sure you want to reject this booking?
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                            <button type="button" class="btn btn-danger" id="confirmRejectBooking">Reject</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                                                                            
+                                            </tr>
+                                            <?php
+                                            }
+                                        }
+                                    } else {
+                                        echo "<tr><td colspan='10' class='text-center'>No records found</td></tr>";
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+                                </div>
+                            </div>
+                        </div>
+                 <!-- cancel -->
 
                         <!-- endaccept   -->
                         <div class="tab-pane active" id="arrival1_div"  style="background-color:white;">  
@@ -299,6 +410,7 @@
                                           <th>Adult</th>
                                           <th>Child</th>
                                           <th>Assign Room</th>
+                                          
                                        </tr>
                                     </thead>
                                     <tbody id="today_arrival_auto">
@@ -352,7 +464,33 @@
                                                 data-bs-target=".bd-room-modal-sm_<?php echo $t_h_b['booking_id'] ?>"
                                                 class="btn btn-success shadow btn-xs sharp "><i
                                                 class="fa fa-check"></i></button>
+                                                
+                                                 <!-- Reject Button -->
+                                                 
+                                                <button class="btn btn-warning shadow btn-xs sharp reject-btn" 
+                                                        data-booking-id="<?php echo $t_h_b['booking_id']; ?>">
+                                                        <i class="fa fa-times"></i>
+                                                    </button>
                                           </td>
+                                          
+                                            <!-- Confirmation Modal -->
+                                                <div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="rejectModalLabel">Confirm Rejection</h5>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                Are you sure you want to reject this booking?
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelReject">Cancel</button>
+                                                                <button type="button" class="btn btn-danger" id="confirmReject">Reject</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                           <!-- Modal -->
                                           <div class="modal fade bd-room-modal-sm_<?php echo $t_h_b['booking_id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
                                              <div class="modal-dialog modal-lg">
@@ -828,47 +966,10 @@
 </div>
 <!-- <script src="<?php //echo base_url('assets/plugins/jquery/jquery.min.js')?>"></script> -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- script for hide show  -->
-<script>
-   $(document).ready(function() {
-      // today_arrival_auto
-      let intervalId = setInterval(autoload, 20000);
-		function autoload() {
-			var base_url = '<?php echo base_url();?>';
-			$.ajax({
-				url: base_url + "FrontofficeController/today_arrival_autoload",
-				method: "GET",
-				success: function(data) {
-               // Clear the table
-               dataTable.clear();
 
-               // Add new data
-               dataTable.rows.add($(data)).draw();
-               $('#today_arrival_auto').html('');
-					$('#today_arrival_auto').append(data);
-				}
-			});
-		}
-      $('.amt_ch input[type="radio"]').click(function() {
-      var inputValue = $(this).attr("value");
-      console.log(inputValue);
-      if (inputValue == "App") {
-      $("#App_Ord").show();
-      $("#Walkin_Ord").hide();
-      
-      } else {
-      $("#Walkin_Ord").show();
-      $("#App_Ord").hide();
-      }
-      });
-      // $('input[type="radio"]').click(function() {
-      //     var inputValue = $(this).attr("value");
-      //     var targetBox = $("." + inputValue);
-      //     $(".walkin_guest").not(targetBox).hide();
-      //     $(targetBox).show();
-      // });
-   });
-</script>
+<!-- script for hide show  -->
+
+
 <!-- click on plus button -->
 <script>
    var appId = 1;
@@ -1222,6 +1323,116 @@ $('#room_type_11').change(function()
     });
 
 </script> 
+
+
+<script>
+$(document).ready(function () {
+    let bookingId = null; // Variable to store the booking ID
+
+    // Open modal and set booking ID dynamically
+    $('.reject-btn').on('click', function () {
+        bookingId = $(this).data('booking-id'); // Get the booking ID from the button
+        $('#rejectModal').modal('show');
+    });
+
+    // Confirm rejection
+    $('#confirmReject').on('click', function () {
+        if (bookingId) {
+            $.ajax({
+                url: "<?php echo base_url('FrontofficeController/reject_booking'); ?>",
+                type: "POST",
+                data: { booking_id: bookingId },
+                dataType: "json",
+                success: function (response) {
+                    if (response.status === "success") {
+                        alert(response.message);
+                        location.reload(); // Refresh the page after rejection
+                    } else {
+                        alert("Error: " + response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log(xhr.responseText);
+                    alert("Something went wrong! Please try again.");
+                }
+            });
+
+            $('#rejectModal').modal('hide'); // Hide the modal after sending the request
+        } else {
+            alert("No booking selected.");
+        }
+    });
+});
+
+
+
+
+$(document).ready(function () {
+    let bookingId = null;
+
+    $('.reject-btn').on('click', function () {
+        bookingId = $(this).data('booking-id');
+        $('#rejectModal').modal('show');
+    });
+
+    $('#confirmReject').on('click', function () {
+        if (bookingId) {
+            $.ajax({
+                url: "<?php echo base_url('FrontofficeController/reject_booking'); ?>",
+                type: "POST",
+                data: { booking_id: bookingId },
+                success: function (response) {
+                    $('#rejectModal').modal('hide');
+                    alert('Booking rejected successfully!');
+                    location.reload(); // Reload the page to reflect changes
+                },
+                error: function () {
+                    alert('Error rejecting the booking.');
+                }
+            });
+        }
+    });
+});
+</script>
+
+<script>
+    $(document).ready(function() {
+    $(".reject-btn").on("click", function() {
+        let bookingId = $(this).data("booking-id");
+
+        $("#confirmReject").off("click").on("click", function() {
+            $.ajax({
+                url: "<?= base_url('FrontofficeController/reject_booking') ?>", 
+                type: "POST",
+                data: { booking_id: bookingId },
+                dataType: "json",
+                success: function(response) {
+                    if (response.status === "success") {
+                        alert(response.message);
+                        location.reload(); // Refresh page after rejection
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function() {
+                    alert("Something went wrong. Please try again.");
+                }
+            });
+        });
+
+        $("#rejectModal").modal("show"); 
+    });
+});
+
+$("#cancelReject").click(function () {
+    window.location.href = "/frontArrival"; // Change to your desired URL
+});
+
+</script>
+
+
+
+
 <script>
     $(document).ready(function() {
             $('.nav-tabs a').on('click', function() {
@@ -1236,6 +1447,46 @@ $('#room_type_11').change(function()
             });
         });
     </script>
+    
+<!-- jQuery & Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    var bookingIdToReject = null; // Global variable to store booking ID
+
+    $(document).ready(function () {
+        // When green tick button is clicked
+        $(".accept-btn").on("click", function () {
+            bookingIdToReject = $(this).data("id"); // Get booking ID from button
+            $("#rejectBookingModal").modal("show"); // Show renamed modal
+        });
+
+        // When reject button is clicked
+        $(document).on("click", "#confirmRejectBooking", function () {
+            if (bookingIdToReject) {
+                $.ajax({
+                    url: "<?= base_url('FrontofficeController/reject_booking') ?>", // Adjust URL
+                    type: "POST",
+                    data: { booking_id: bookingIdToReject },
+                    dataType: "json",
+                    success: function (response) {
+                        alert(response.message);
+                        if (response.status === "success") {
+                            location.reload(); // Reload page after success
+                        }
+                    },
+                    error: function () {
+                        alert("An error occurred. Please try again.");
+                    },
+                });
+
+                // Hide modal after request is sent
+                $("#rejectBookingModal").modal("hide");
+            } else {
+                alert("No booking ID found!");
+            }
+        });
+    });
+</script>
 </body>
 </html>
 <!-- <script>

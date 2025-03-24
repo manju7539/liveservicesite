@@ -148,7 +148,7 @@ border-radius: 8px;
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="card-box  bg-light">
-                                <div class="card-head">
+                                <!-- <div class="card-head">
                                     <header>Gallery</header>
                                     <button id="panel-button"
                                         class="mdl-button mdl-js-button mdl-button--icon pull-right"
@@ -164,7 +164,7 @@ border-radius: 8px;
                                         <li class="mdl-menu__item"><i class="material-icons">favorite</i>Something else
                                             here</li>
                                     </ul>
-                                </div>
+                                </div> -->
                                 <div class="card-body row">
                                     <div id="aniimated-thumbnials" class="list-unstyled row clearfix" style="background: #e8e8e8bd;padding: 14px;">
                                       
@@ -172,7 +172,7 @@ border-radius: 8px;
                                     <div class="custom_icon_block active" id="icon_1" data-id="1">
                                         <a href="javascript:void(0)" data-sub-html="Demo Description">
                                              <img src="<?php echo base_url('assets/dist/images/big/laundry.png')?>" alt="" title="Laundry Service" class='icon_size'>
-                                             <p class="icon_header">Laundry Service</p>
+                                             <p class="icon_header">House keeping</p>
                                         </a> 
                                         <!-- <div class="tooltip">
   <span class="tooltiptext">Tooltip text</span>
@@ -181,13 +181,13 @@ border-radius: 8px;
                                     <div class="custom_icon_block inactive" id="icon_2" data-id="2">
                                         <a href="javascript:void(0)" data-sub-html="Demo Description">
                                              <img src="<?php echo base_url('assets/dist/images/big/service.png')?>" alt=""  title="Services" class='icon_size'>
-                                             <p class="icon_header">Room Services</p>
+                                             <p class="icon_header">House keeping</p>
                                         </a> 
                                     </div>
                                     <div class="custom_icon_block inactive" id="icon_3" data-id="3">
                                         <a href="javascript:void(0)" data-sub-html="Demo Description">
                                              <img src="<?php echo base_url('assets/dist/images/big/room_status.png')?>" alt="" title="Room Status" class='icon_size'>
-                                             <p class="icon_header">Room Status</p>
+                                             <p class="icon_header">House keeping</p>
                                         </a> 
                                     </div>
                                     

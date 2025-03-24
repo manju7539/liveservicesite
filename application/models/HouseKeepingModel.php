@@ -52,6 +52,13 @@
         // exit;
         return $query->result_array();
     }
+    
+    public function getCount($table, $where)
+    {
+        $this->db->where($where);
+        return $this->db->count_all_results($table);
+   }
+
           function get_new_order_list_pagination($todays_date,$hotel_id)
           {
               $data = array();

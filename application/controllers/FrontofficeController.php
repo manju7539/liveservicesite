@@ -35,6 +35,9 @@ class FrontofficeController extends CI_Controller
         // print_r($guest_history);exit;
         $this->load->view('frontoffice/ajaxinhouseviewservice', $guest_history);
     }
+    
+  
+
     public function change_check_in_guest()
                 {
                     $cat = $this->input->post('cat');
@@ -402,46 +405,6 @@ class FrontofficeController extends CI_Controller
         $front_dashboard['get_front_ofs_notifications'] = array_merge($all_hotel_notis_from_SA, $specific_hotel_notis_from_SA, $get_front_ofs_notis);
         $this->load->view('frontoffice/ajax_frontoffice_notification', $front_dashboard);
     }
-
-    public function frontoffice_notification_ajax()
-    {
-        $admin_id = $this->session->userdata('u_id');
-        if (!$admin_id) {
-            echo ""; // Return empty response if no user
-            return;
-        }
-    
-        $wh_admin = '(u_id ="' . $admin_id . '")';
-        $get_hotel_id = $this->MainModel->getData('register', $wh_admin);
-    
-        if (!$get_hotel_id) {
-            echo ""; // No data, return empty
-            return;
-        }
-    
-        $hotel_id = $get_hotel_id['hotel_id'];
-        $today_date = date('Y-m-d');
-    
-        // Fetch notifications
-        $all_hotel_notis_from_SA = $this->FrontofficeModel->all_hotel_notic_from_superadmin12($today_date);
-        $specific_hotel_notis_from_SA = $this->FrontofficeModel->specific_hotel_notis_from_SA12($hotel_id, $today_date);
-        $get_front_ofs_notis = $this->FrontofficeModel->get_notifications_for_front_ofs($hotel_id, $today_date);
-    
-        // Combine all notifications
-        $notifications = array_merge($all_hotel_notis_from_SA, $specific_hotel_notis_from_SA, $get_front_ofs_notis);
-    
-        // If no notifications, return empty response
-        if (empty($notifications)) {
-            echo "";
-            return;
-        }
-    
-        // Load the AJAX view
-        $this->load->view('frontoffice/ajax_frontoffice_notification', ['get_front_ofs_notifications' => $notifications]);
-    }
-    
-    
-    
     public function geteditgymData()
     {
         $admin_id = $this->session->userdata('u_id');
@@ -1547,6 +1510,93 @@ class FrontofficeController extends CI_Controller
         // $this->load->view('include/footer');
 
     }
+    
+ /*   public function reject_booking()
+{
+    $booking_id = $this->input->post('booking_id');
+
+    if (!empty($booking_id)) {
+        $this->db->where('booking_id', $booking_id);
+        $this->db->update('user_hotel_booking', ['booking_status' => 3]);
+
+        if ($this->db->affected_rows() > 0) {
+            echo json_encode(['status' => 'success', 'message' => 'Booking rejected successfully.']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Failed to reject booking.']);
+        }
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Invalid booking ID.']);
+    }
+} */
+
+public function reject_booking()
+{
+    $booking_id = $this->input->post('booking_id');
+
+    if (!empty($booking_id)) {
+        // Update booking status in user_hotel_booking
+        $this->db->where('booking_id', $booking_id);
+        $this->db->update('user_hotel_booking', ['booking_status' => 3]);
+
+        if ($this->db->affected_rows() > 0) {
+            // Fetch enquiry details linked to this booking
+            $this->db->select('her.hotel_enquiry_request_id, her.u_id, uhb.hotel_id');
+            $this->db->from('hotel_enquiry_request as her');
+            $this->db->join('user_hotel_booking as uhb', 'her.hotel_enquiry_request_id = uhb.enquiry_id', 'inner');
+            $this->db->where('uhb.booking_id', $booking_id);
+            $enquiry = $this->db->get()->row_array();
+
+            if (!empty($enquiry)) {
+                $enquiry_u_id = $enquiry['u_id'];
+                $hotel_id = $enquiry['hotel_id'];
+
+                // Update enquiry request status
+                $this->db->where('hotel_enquiry_request_id', $enquiry['hotel_enquiry_request_id']);
+                $this->db->update('hotel_enquiry_request', ['request_status' => 2]);
+
+                // Fetch Firebase token for user
+                $user_token = $this->db->get_where('user_firebase_tokens', ['u_id' => $enquiry_u_id])->row_array();
+                
+                if (!empty($user_token)) {
+                    $deviceToken = $user_token['token'];
+                    $title = 'Your Booking Has Been Cancelled';
+                    $body = 'Your Booking ID is "' . $booking_id . '"';
+                    
+                    // Send push notification
+                    send_push_notification($deviceToken, $title, $body);
+                }
+
+                // Fetch hotel details
+                $hotel = $this->db->get_where('register', ['u_id' => $hotel_id])->row_array();
+                $hotel_name = !empty($hotel) ? $hotel['hotel_name'] : 'Unknown Hotel';
+
+                // Insert in-app notification
+                $notification_data = [
+                    'hotel_id' => $hotel_id,
+                    'u_id' => $enquiry_u_id,
+                    'subject' => $title,
+                    'description' => "$title at $hotel_name. Your Booking ID is $booking_id",
+                    'clear_flag' => 1,
+                    'count_flag' => 1,
+                ];
+                $this->db->insert('user_notification', $notification_data);
+            }
+
+            // Return success response
+            echo json_encode(['status' => 'success', 'message' => 'Booking rejected successfully.']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Failed to reject booking.']);
+        }
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Invalid booking ID.']);
+    }
+}
+
+
+
+
+
+    
     public function frontDeparture()
     {
 
@@ -1731,20 +1781,16 @@ class FrontofficeController extends CI_Controller
         }
     }
     public function encquery_auot_load_data()
-        {
-            $u_id = $this->session->userdata('u_id');
-            $where = '(u_id = "' . $u_id . '")';
-            $admin_details = $this->MainModel->getData($tbl = 'register', $where);
-            $admin_id = $admin_details['hotel_id'];
+    {
+        $u_id = $this->session->userdata('u_id');
+        $where = '(u_id = "' . $u_id . '")';
+        $admin_details = $this->MainModel->getData($tbl = 'register', $where);
+        $admin_id = $admin_details['hotel_id'];
 
-            $todays_date = date('Y-m-d');
-
-            // Fetch only records from today onwards
-            $enquiry_request["list"] = $this->FrontofficeModel->get_hotel_enquiry_request_pagination($admin_id, $todays_date);
-            
-            $this->load->view('frontoffice/autoload_enquiry', $enquiry_request);
-        }
-
+        $todays_date = date('Y-m-d');
+        $enquiry_request["list"] = $this->FrontofficeModel->get_hotel_enquiry_request_pagination($admin_id, $todays_date);
+        $this->load->view('frontoffice/autoload_enquiry', $enquiry_request);
+    }
 
     public function acceptedByUser()
     {

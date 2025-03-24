@@ -50,6 +50,14 @@ class FrontofficeModel extends CI_Model
 
     return $data;
   }
+  
+  public function get_bookings_by_status($status) {
+    $this->db->select('*');
+    $this->db->from('user_hotel_booking');
+    $this->db->where('booking_status', $status);
+    return $this->db->get()->result_array();
+}
+  
   public function search_visitor_data($admin_id,$visit_date)
   {
       $this->db->select('*');
@@ -439,6 +447,26 @@ class FrontofficeModel extends CI_Model
         // echo $this->db->last_query();
         return $this->db->get($tbl)->result_array();
     }
+   /* public function get_hotel_enquiry_request_pagination($hotel_id,$today_date)
+    {
+        // print_r($hotel_id);exit;
+        $data = array();
+        $this->db->select('*');
+        $this->db->order_by('hotel_enquiry_request_id', 'DESC');
+        $this->db->where('hotel_id', $hotel_id);
+        $this->db->where('check_in_date', $today_date);
+        $this->db->where('request_status', 0);
+        $this->db->where('is_main_req', 1);
+        $Q = $this->db->get('hotel_enquiry_request');
+        if ($Q->num_rows() > 0) {
+            foreach ($Q->result_array() as $row) {
+                $data[] = $row;
+            }
+        }
+        $Q->free_result();
+        return $data;
+    }*/
+    
     public function get_hotel_enquiry_request_pagination($hotel_id, $today_date)
 {
     $data = array();
@@ -460,6 +488,7 @@ class FrontofficeModel extends CI_Model
     return $data;
 }
 
+    
     function get_enquiry_accepted_by_user($hotel_id)
     {
         $data = array();
@@ -1249,23 +1278,6 @@ class FrontofficeModel extends CI_Model
         $this->db->join('notifictions_department_id','notifictions_department_id.notification_id = notifications.notification_id','left');
         return $this->db->get('notifications')->result_array();
     }
-    public function get_notifications_for_front_ofs12($hotel_id, $today_date)
-{
-    $this->db->select('notification_id, created_at, title, description');
-    $this->db->where('hotel_id', $hotel_id);
-    $this->db->where('DATE(created_at)', $today_date);
-    $this->db->order_by('notification_id', 'desc');
-
-    $query = $this->db->get('notifications');
-
-    // Debugging
-    if ($query->num_rows() == 0) {
-        log_message('error', 'No notifications found in get_notifications_for_front_ofs for hotel ID: ' . $hotel_id);
-    }
-
-    return $query->result_array();
-}
-
 
     //total hotels expected current booking ------supriya
    
@@ -2108,54 +2120,6 @@ class FrontofficeModel extends CI_Model
         $this->db->where('notifictions_u_id.user_id',$hotel_id);
         return $this->db->get('notifications as not')->result_array();
     }
-
-    public function all_hotel_notic_from_superadmin12($today_date)
-    {
-        $this->db->select('notification_id, created_at, title, description, resend_count as all_hotels_resent_not');
-        $this->db->where([
-            'send_by_id' => 1,
-            'send_for' => 1,
-            'send_to' => 1,
-            'notification_type' => 2
-        ]);
-        $this->db->where('DATE(created_at)', $today_date);
-        $this->db->order_by('notification_id', 'desc');
-    
-        $query = $this->db->get('notifications');
-        
-        // Debugging
-        if ($query->num_rows() == 0) {
-            log_message('error', 'No notifications found in all_hotel_notic_from_superadmin12');
-        }
-    
-        return $query->result_array();
-    }
-    
-    
-    public function specific_hotel_notis_from_SA12($hotel_id, $today_date)
-{
-    $this->db->select('not.notification_id, not.created_at, not.title, not.description, not.resend_count as specific_hotel_resent_not');
-    $this->db->where([
-        'not.send_by_id' => 1,
-        'not.send_for' => 2,
-        'not.send_to' => 2,
-        'not.notification_type' => 2
-    ]);
-    $this->db->where('DATE(not.created_at)', $today_date);
-    $this->db->join('notifictions_u_id', 'notifictions_u_id.notification_id = not.notification_id');
-    $this->db->where('notifictions_u_id.user_id', $hotel_id);
-    $this->db->order_by('not.notification_id', 'desc');
-
-    $query = $this->db->get('notifications as not');
-    
-    // Debugging
-    if ($query->num_rows() == 0) {
-        log_message('error', 'No notifications found in specific_hotel_notis_from_SA12 for hotel ID: ' . $hotel_id);
-    }
-
-    return $query->result_array();
-}
-
     public function getregdata($tbl,$wh){
         $this->db->select('*');
         $this->db->where('b_c_reserve_id',$wh);

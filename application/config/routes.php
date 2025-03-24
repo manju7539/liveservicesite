@@ -59,6 +59,7 @@ $route['newAcceptOrder'] = 'HomeController/newAcceptOrder';
 $route['newRejectOrder'] = 'HomeController/newRejectOrder';
 $route['newCompleteOrder'] = 'HomeController/newCompleteOrder';
 $route['newManageOrder'] = 'HomeController/newManageOrder';
+$route['ChatUser'] = 'ChatUserController/ChatUser';
 $route['newRequest'] = 'HomeController/newRequest';
 $route['acceptedOrder'] = 'HomeController/acceptedOrder';
 $route['rejectedOrder'] = 'HomeController/rejectedOrder';
@@ -286,6 +287,11 @@ $route['send_enquiry_request'] = 'UserApi/send_enquiry_request'; //7/11/2022
 $route['get_enquiry_request_list'] = 'UserApi/get_enquiry_request_list'; //8/11/2022
 
 $route['is_confirm_booking'] = 'UserApi/is_confirm_booking'; //8/11/2022
+
+$route['reject_booking_api'] = 'UserApi/reject_booking_api';
+
+$route['user_reject_booking'] = 'UserApi/user_reject_booking';
+
 
 $route['login_as_guest'] = 'UserApi/login_as_guest'; //8/11/2022
 
